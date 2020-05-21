@@ -28,6 +28,9 @@ public class MyServlet extends HttpServlet {
 		
 		//response.sendRedirect("MainPage.jsp");
 		
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
+		
 		PrintWriter out = response.getWriter();
 		
 		String text = "<!DOCTYPE html>\r\n" + 
@@ -50,6 +53,8 @@ public class MyServlet extends HttpServlet {
 				"</html>";
 		 
 		out.println(text+"<br />"+"<br />");
+		out.println(bookList());
+		//out.println(bookList("ASD"));
 	}
 
 	/**
@@ -57,16 +62,40 @@ public class MyServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String aname=request.getParameter("aname");
+		
+		response.setContentType("text/html; charset=UTF-8");
+		response.setCharacterEncoding("UTF-8");
 		PrintWriter out = response.getWriter();
-		out.println("Wyszukiwany tekst: "+aname + "<br />" + "<br />");
-
+		
+		String text = "<!DOCTYPE html>\r\n" + 
+				"<html>\r\n" + 
+				"<head>\r\n" + 
+				"<meta charset=\"ISO-8859-1\">\r\n" + 
+				"<title>Insert title here</title>\r\n" + 
+				"</head>\r\n" + 
+				"<body>\r\n" + 
+				"	<form method=\"post\" action=\"SelectBook\">\r\n" + 
+				"		<table>\r\n" + 
+				"			<tr>\r\n" + 
+				"				<td>Wyszukaj tekst</td>\r\n" + 
+				"				<td><input type=\"text\" name=\"aname\"></td>\r\n" + 
+				"				<td><input type=\"submit\" name=\"button\"></td>\r\n" + 
+				"			</tr>\r\n" + 
+				"		</table>\r\n" + 
+				"	</form>\r\n" + 
+				"</body>\r\n" + 
+				"</html>";
+		 
+		out.println(text+"<br />"+"<br />");
+		//out.println("Wyszukiwany tekst: "+aname + "<br />" + "<br />");
+		out.println(bookList(aname));
 	}
 	
 	
 	public String bookList(String string) {
 		//return "Lista książek"; //USUNAC !!!!!!
 		
-		String text = null;
+		String text = "";
 		if (string==null) {
 			Connection con = myConnection();
 			try {
@@ -83,6 +112,8 @@ public class MyServlet extends HttpServlet {
 					text+=(resultSet.getString(4)+".");
 					text+=("<br />");
 				}
+				
+				//text=("Wynik dla null");
 				
 			} catch (SQLException e) {
 				text=("Brak połączenia z bazą danych");
@@ -122,6 +153,7 @@ public class MyServlet extends HttpServlet {
 	public static Connection myConnection() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
+			//Class.forName("com.mysql.cj.jdbc.Driver");
 			//System.out.println("Driver found.");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
